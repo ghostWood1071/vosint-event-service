@@ -49,7 +49,6 @@ class KafkaConsumer_event_class:
                 # except:
                 #     # Nếu xử lý lỗi, không commit offset
                 #     pass
-        datetime.datetime.now()
         consumer.commit_async()
         consumer.close()
         return result
