@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Any
 
 from pydantic import AnyHttpUrl, BaseSettings
 
@@ -6,10 +6,10 @@ import sys
 import os
 script_path = os.path.abspath(sys.argv[0])
 script_directory = os.path.dirname(script_path)
-print(script_directory)
+
 class Settings(BaseSettings):
     # APP_TITLE: str = "V-OSINT API"
-    APP_ORIGINS: List[AnyHttpUrl] = [
+    APP_ORIGINS = [
         "http://localhost:5173",
         "http://127.0.0.1:2000",
         "http://118.70.48.144:2000",
@@ -81,3 +81,11 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
+setting_dict = settings.dict()
+for env_name in list(settings.__annotations__.keys()):
+    type_obj = settings.__annotations__[env_name]
+    if type_obj != List[str]:
+        env_val = type_obj(os.environ.get(env_name, setting_dict.get(env_name)))
+    else:
+        env_val = os.environ.get(env_name, str(setting_dict.get(env_name)))
+    settings.__setattr__(env_name, env_val)
