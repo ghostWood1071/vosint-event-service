@@ -4,6 +4,8 @@ from pydantic import AnyHttpUrl, BaseSettings
 
 import sys
 import os
+from decouple import Config
+
 script_path = os.path.abspath(sys.argv[0])
 script_directory = os.path.dirname(script_path)
 
