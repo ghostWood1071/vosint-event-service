@@ -33,8 +33,8 @@ class Settings:
     DATABASE_NAME: str  = ""
 
     #Mongo
-    MONGO_DETAILS: str = ""
-    DATABASE_NAME: str =  ""
+    # MONGO_DETAILS: str = ""
+    # DATABASE_NAME: str =  ""
     
     mong_host:str = ""
     mongo_port: int = ""
@@ -44,17 +44,17 @@ class Settings:
 
     ROOT_PATH: str = ""
 
-    # APP_HOST: str = "0.0.0.0"
-    # APP_PORT: int = 3100
-    # APP_STATIC_DIR: str = "/home/ds1/vosint/v-osint-backend/static"
+    APP_HOST: str = "0.0.0.0"
+    APP_PORT: int = 3100
+    APP_STATIC_DIR: str = "/home/ds1/vosint/v-osint-backend/static"
 
-    # PRIVATE_KEY: str
-    # PUBLIC_KEY: str
+    PRIVATE_KEY: str = ""
+    PUBLIC_KEY: str = ""
 
-    # MONGO_DETAILS: str = "mongodb://127.0.0.1:27017"
-    # DATABASE_NAME: str = "v-osint"
+    MONGO_DETAILS: str = "mongodb://127.0.0.1:27017"
+    DATABASE_NAME: str = "v-osint"
 
-    # ROOT_PATH: str = "./"
+    ROOT_PATH: str = "./"
 
     # class Config:
     #     env_file = ".env"
@@ -102,11 +102,3 @@ class Settings:
 
 
 settings = Settings()
-# setting_dict = settings.dict()
-# for env_name in list(settings.__annotations__.keys()):
-#     type_obj = settings.__annotations__[env_name]
-#     if type_obj != List[str]:
-#         env_val = type_obj(os.environ.get(env_name, setting_dict.get(env_name)))
-#     else:
-#         env_val = os.environ.get(env_name, str(setting_dict.get(env_name)))
-#     settings.__setattr__(env_name, env_val)
