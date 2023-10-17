@@ -49,7 +49,6 @@ class KafkaConsumer_event_class:
                 # except:
                 #     # Nếu xử lý lỗi, không commit offset
                 #     pass
-        datetime.now()
         consumer.commit_async()
         consumer.close()
         return result
@@ -64,7 +63,9 @@ class KafkaConsumer_event_class:
         # )
         # get tin in weeek
         start_date, end_date = get_day_in_week()
-        requests.post(settings.EXTRACT_API, params={"id":  message['id_new'], "start_date": start_date, "end_date": end_date})
+        request = requests.post(settings.EXTRACT_API, params={"id":  message['id_new'], "start_date": start_date, "end_date": end_date})
+        if not request.ok:
+            print("can not extract event")
         # i = 0
         # f = open('/home/ds1/vosint/v-osint-backend/vosint_ingestion/time_log_events.txt','a')
         # f.write(str(i)+ ' '+str(time.time()-start_time)+'\n')
