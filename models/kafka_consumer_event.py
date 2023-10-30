@@ -21,47 +21,22 @@ class KafkaConsumer_event_class:
             topic,
             bootstrap_servers=settings.KAFKA_CONNECT.split(','),
             auto_offset_reset="earliest",
-            enable_auto_commit=False,  # Tắt tự động commit offset
+            enable_auto_commit=True,  # Tắt tự động commit offset
             group_id=group_ids,
             value_deserializer=lambda m: json.loads(m.decode("utf-8")),
         )
 
         messages = consumer.poll(10000, 1)
+        consumer.close()
         for tp, messages in messages.items():
             for message in messages:
                 # Xử lý message
                 message = message.value
                 result = self.excute(message)
-                # try:
-                #     try:
-                #         result = self.excute(message)
-
-                #     except:
-                #         pass
-                #         #self.preducer.write(topic='crawling',message=message)
-                #     finally:
-                #         consumer.commit({
-                #             tp: {
-                #                 'offset': message.offset + 1
-                #             }
-                #         })
-                #         consumer.commit_async()
-                # except:
-                #     # Nếu xử lý lỗi, không commit offset
-                #     pass
-        consumer.commit_async()
-        consumer.close()
         return result
+    
 
     def excute(self, message):
-        # print(message)
-        # self.extract_event.merge(
-        #     datetime.datetime.strptime(message["pubdate"].split(" ")[0], "%Y-%m-%d"),
-        #     message["title"],
-        #     message["content"],
-        #     message["id_new"],
-        # )
-        # get tin in weeek
         start_date, end_date = get_day_in_week()
         request = requests.post(settings.EXTRACT_API, params={"id":  message['id_new'], "start_date": start_date, "end_date": end_date})
         if not request.ok:
