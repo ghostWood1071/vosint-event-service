@@ -82,6 +82,8 @@ class Settings:
 
     EXTRACT_API: str = ""
 
+    SUMMARIZE_API: str = ""
+
     def dict(self):
         data = {k: self.__getattribute__(k) for k in self.__annotations__.keys()}
         return data
