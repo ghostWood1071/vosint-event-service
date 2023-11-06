@@ -60,6 +60,28 @@ class KafkaConsumer_event_class:
             result[f"s{int(k*100)}"] = self.summarize(lang, title, paras, k)
         return result
 
+    def translate(self, language:str, content:str):
+        result = ""
+        try:
+            lang_dict = {
+                'cn': 'chinese',
+                'ru': 'russia',
+                'en': 'english'
+            }
+            lang_code = lang_dict.get(language)
+            req = requests.post(settings.TRANSLATE_API, data=json.dumps(
+                {
+                    "language": lang_code,
+                    "text": content
+                }
+            ))
+            result = req.json().get("translate_text")
+            if not req.ok:
+                raise Exception()
+        except:
+            result = ""
+        return result
+    
     def excute(self, message):
         start_date, end_date = get_day_in_week()
         request = requests.post(settings.EXTRACT_API, params={"id":  message['id_new'], "start_date": start_date, "end_date": end_date})
@@ -75,7 +97,8 @@ class KafkaConsumer_event_class:
                     news = MongoRepository().get_one("News", {"_id": news_id})
                     lang = news.get("source_language")
                     summ = self.summarize_all_level(lang, event["event_name"], event["event_content"])
-                    MongoRepository().update_many("events", {"_id": event.get("_id")}, {"$set": {"data:summaries": summ}})
+                    translate = self.translate(lang, event["event_content"])
+                    MongoRepository().update_many("events", {"_id": event.get("_id")}, {"$set": {"data:summaries": summ, "content_translate": translate}})
         except Exception as e:
             print(e)
                 
