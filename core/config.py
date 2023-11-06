@@ -84,7 +84,7 @@ class Settings:
 
     SUMMARIZE_API: str = ""
 
-    TRANSlATE_API: str = ""
+    TRANSLATE_API: str = ""
     
     def dict(self):
         data = {k: self.__getattribute__(k) for k in self.__annotations__.keys()}
