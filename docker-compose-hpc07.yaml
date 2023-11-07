@@ -14,7 +14,7 @@ services:
             - ELASTIC_CONNECT=http://master5:9200,http://master6:9200
             - EXTRACT_API=http://vosint-eventextraction-hpc07:1510/extract
             - SUMMARIZE_API=http://vosint-sumthesis-hpc07:1510/ext
-
+            - TRANSLATE_API=http://vosint-translate-hpc07:1510/api/translate
         deploy:
             restart_policy:
                 condition: on-failure
