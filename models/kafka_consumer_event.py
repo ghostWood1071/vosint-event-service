@@ -97,7 +97,7 @@ class KafkaConsumer_event_class:
                     news = MongoRepository().get_one("News", {"_id": news_id})
                     lang = news.get("source_language")
                     summ = self.summarize_all_level(lang, event["event_name"], event["event_content"])
-                    translate = self.translate(lang, event["event_content"])
+                    translate = "" #self.translate(lang, event["event_content"])
                     MongoRepository().update_many("events", {"_id": event.get("_id")}, {"$set": {"data:summaries": summ, "content_translate": translate}})
         except Exception as e:
             print(e)
