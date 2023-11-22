@@ -83,6 +83,7 @@ class KafkaConsumer_event_class:
         return result
     
     def excute(self, message):
+        time_start = datetime.now()
         start_date, end_date = get_day_in_week()
         request = requests.post(settings.EXTRACT_API, params={"id":  message['id_new'], "start_date": start_date, "end_date": end_date})
         if not request.ok:
@@ -101,4 +102,5 @@ class KafkaConsumer_event_class:
                     MongoRepository().update_many("events", {"_id": event.get("_id")}, {"$set": {"data:summaries": summ, "content_translate": translate}})
         except Exception as e:
             print(e)
-                
+        time_end = datetime.now()
+        print(time_end-time_start)
