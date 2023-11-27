@@ -86,6 +86,7 @@ class KafkaConsumer_event_class:
         time_start = datetime.now()
         start_date, end_date = get_day_in_week()
         request = requests.post(settings.EXTRACT_API, params={"id":  message['id_new'], "start_date": start_date, "end_date": end_date})
+        is_display = True if message.get("display") else False
         if not request.ok:
             print("can not extract event")
         try:
@@ -99,7 +100,18 @@ class KafkaConsumer_event_class:
                     lang = news.get("source_language")
                     summ = self.summarize_all_level(lang, event["event_name"], event["event_content"])
                     translate = "" #self.translate(lang, event["event_content"])
-                    MongoRepository().update_many("events", {"_id": event.get("_id")}, {"$set": {"data:summaries": summ, "content_translate": translate}})
+                    MongoRepository().update_many("events", 
+                                                    {
+                                                      "_id": event.get("_id")
+                                                    }, 
+                                                    {
+                                                      "$set": {
+                                                        "data:summaries": summ, 
+                                                        "content_translate": translate,
+                                                        "display": is_display
+                                                      }
+                                                    }
+                                                )
         except Exception as e:
             print(e)
         time_end = datetime.now()
