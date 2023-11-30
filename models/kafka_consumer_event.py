@@ -25,12 +25,11 @@ class KafkaConsumer_event_class:
         )
 
         messages = consumer.poll(10000, 1)
-        consumer.close()
         for tp, messages in messages.items():
             for message in messages:
-                # Xử lý message
                 message = message.value
                 result = self.excute(message)
+        consumer.close()
         return result
     
     def summarize(self, lang: str = "", title: str = "", paras: str = "", k: float = 0.4):
@@ -45,7 +44,7 @@ class KafkaConsumer_event_class:
                         "k": k,
                         "description": "",
                     }
-                ),
+                )
             )
             if request.status_code != 200:
                 raise Exception("Summarize failed")
