@@ -26,11 +26,12 @@ class KafkaConsumer_event_class:
         )
 
         messages = consumer.poll(10000, 1)
+        consumer.close()
         for tp, messages in messages.items():
             for message in messages:
                 message = message.value
                 result = self.excute(message)
-        consumer.close()
+        
         return result
     
     def summarize(self, lang: str = "", title: str = "", paras: str = "", k: float = 0.4):
@@ -92,26 +93,28 @@ class KafkaConsumer_event_class:
         try:
             data = request.json()
             event_id = data.get("id_new")
-            if event_id != None:
-                event = MongoRepository().get_one("events", {"_id": event_id})
-                if event != None:
-                    news_id = event.get("new_list")[0]
-                    news = MongoRepository().get_one("News", {"_id": news_id})
-                    lang = news.get("source_language")
-                    summ = self.summarize_all_level(lang, event["event_name"], event["event_content"])
-                    translate = "" #self.translate(lang, event["event_content"])
-                    MongoRepository().update_many("events", 
-                                                    {
-                                                      "_id": event.get("_id")
-                                                    }, 
-                                                    {
-                                                      "$set": {
-                                                        "data:summaries": summ, 
-                                                        "content_translate": translate,
-                                                        "display": is_display
-                                                      }
-                                                    }
-                                                )
+            status = data.get("status")
+            if "Not Duplicate, Insert succesful" in str(status):
+                if event_id != None:
+                    event = MongoRepository().get_one("events", {"_id": event_id})
+                    if event != None:
+                        news_id = event.get("new_list")[0]
+                        news = MongoRepository().get_one("News", {"_id": news_id})
+                        lang = news.get("source_language")
+                        summ = self.summarize_all_level(lang, event["event_name"], event["event_content"])
+                        translate = "" #self.translate(lang, event["event_content"])
+                        MongoRepository().update_many("events", 
+                                                        {
+                                                        "_id": event.get("_id")
+                                                        }, 
+                                                        {
+                                                        "$set": {
+                                                            "data:summaries": summ, 
+                                                            "content_translate": translate,
+                                                            "display": is_display
+                                                        }
+                                                        }
+                                                    )
         except Exception as e:
             print("-------------------------------------------------------------")
             print(e)
