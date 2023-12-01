@@ -30,8 +30,8 @@ def norm_text(text: str) -> str:
 
 def get_day_in_week():
     current_date = datetime.now()
-    start_of_week = current_date - timedelta(days=current_date.weekday())
-    end_of_week = start_of_week + timedelta(days=2)
-    formatted_start_of_week = start_of_week.strftime("%d-%m-%YT%H:%M:%S")
-    formatted_end_of_week = end_of_week.strftime("%d-%m-%YT%H:%M:%S")
+    start_of_week = current_date - timedelta(days=1)
+    end_of_week = start_of_week + timedelta(days=0)
+    formatted_start_of_week = start_of_week.strftime("%d-%m-%YT00:00:00")
+    formatted_end_of_week = end_of_week.strftime("%d-%m-%YT23:59:59")
     return formatted_start_of_week, formatted_end_of_week

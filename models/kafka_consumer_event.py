@@ -8,6 +8,7 @@ import datetime
 from core.config import settings
 from utils import *
 from models.mongorepository import MongoRepository
+import traceback
 
 class KafkaConsumer_event_class:
     def __init__(self):
@@ -112,6 +113,9 @@ class KafkaConsumer_event_class:
                                                     }
                                                 )
         except Exception as e:
+            print("-------------------------------------------------------------")
             print(e)
+            traceback.print_exc()
+            print("-------------------------------------------------------------")
         time_end = datetime.now()
         print(time_end-time_start)
