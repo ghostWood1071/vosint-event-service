@@ -8,7 +8,7 @@ class KafkaProducer_class:
     def __init__(self):
         # Create a Kafka producer object
         self.producer = KafkaProducer(
-            bootstrap_servers=settings.KAFKA_CONNECT.split(',')
+            bootstrap_servers=[settings.KAFKA_CONNECT]
         )
            
     def write(self, topic: str, message):
@@ -21,7 +21,7 @@ class KafkaProducer_class:
 
     def check_topic_exist(self,topic_name):
         #print(1)
-        admin_client = KafkaAdminClient(bootstrap_servers=settings.KAFKA_CONNECT.split(','))
+        admin_client = KafkaAdminClient(bootstrap_servers=[settings.KAFKA_CONNECT])
         #print(2)
         topic_metadata = admin_client.list_topics()
         #print(3)
